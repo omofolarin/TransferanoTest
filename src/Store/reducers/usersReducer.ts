@@ -5,9 +5,14 @@ import {
   createReducer,
 } from '@reduxjs/toolkit';
 
-const sortUsers = createAction<number>('sortUsers');
-const filterUsers = createAction<number>('filterUsers');
-const fetchUsers = createAction<number>('fetchUsers');
+import {User} from '../../Services';
+
+const sortUsers =
+  createAction<{sortBy: keyof User; orderBy: 'asc' | 'desc'}>('sortUsers');
+const filterUsers = createAction<User[]>('filterUsers');
+const fetchUsers = createAction<User[]>('fetchUsers');
+const deleteUsers = createAction<string[]>('deleteUsers');
+const resetUserList = createAction<User[]>('resetUserList');
 
 function isActionWithNumberPayload(
   action: AnyAction,
@@ -15,26 +20,38 @@ function isActionWithNumberPayload(
   return typeof action.payload === 'number';
 }
 
-export const usersReducer = createReducer(
+export const usersReducer = createReducer<{
+  users: User[];
+}>(
   {
-    counter: 0,
-    sumOfNumberPayloads: 0,
-    unhandledActions: 0,
+    users: [],
   },
   builder => {
     builder
       .addCase(sortUsers, (state, action) => {
         // action is inferred correctly here
-        state.counter += action.payload;
+        state.users = state.users.sort(function (a, b) {
+          const sortKey = action.payload.sortBy;
+          const first = a?.[sortKey]?.toLowerCase();
+          const second = b?.[sortKey]?.toLowerCase();
+
+          if (action.payload.orderBy === 'asc') {
+            return first < second ? -1 : 1;
+          } else {
+            return first < second ? 1 : -1;
+          }
+        });
       })
-      // You can chain calls, or have separate `builder.addCase()` lines each time
+
       .addCase(filterUsers, (state, action) => {
         state.counter -= action.payload;
       })
       .addCase(fetchUsers, (state, action) => {})
-      // You can apply a "matcher function" to incoming actions
+
+      .addCase(deleteUsers, (state, action) => {})
+      .addCase(resetUserList, (state, action) => {})
       .addMatcher(isActionWithNumberPayload, (state, action) => {})
-      // and provide a default case if no other handlers matched
+
       .addDefaultCase((state, action) => {});
   },
 );
