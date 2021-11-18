@@ -5,15 +5,19 @@ import {User} from './types';
 
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
-  reducerPath: 'pokemonApi',
+  reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({baseUrl: 'https://pokeapi.co/api/v2/'}),
   endpoints: builder => ({
-    getPokemonByName: builder.query<User, string>({
+    getUserByName: builder.query<User, string>({
       query: name => `user/${name}`,
+    }),
+
+    listAttendees: builder.query<User[], {name: string}>({
+      query: filter => `user/${filter.name}`,
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useGetPokemonByNameQuery} = userApi;
+export const {useGetUserByNameQuery} = userApi;
