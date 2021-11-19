@@ -34,7 +34,7 @@ export const store = configureStore({
       },
     })
       .concat(userApi.middleware)
-      .concat(__DEV__ && require('redux-flipper').default()),
+      .concat(__DEV__ ? require('redux-flipper').default() : []),
 });
 
 export const persistor = persistStore(store);

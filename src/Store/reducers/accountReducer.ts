@@ -1,38 +1,42 @@
-import {
-  AnyAction,
-  PayloadAction,
-  createAction,
-  createReducer,
-} from '@reduxjs/toolkit';
+import {createAction, createReducer} from '@reduxjs/toolkit';
 
-const logIn = createAction<number>('logIn');
-const logOut = createAction<number>('logOut');
+import {User} from '../../Services';
 
-function isActionWithNumberPayload(
-  action: AnyAction,
-): action is PayloadAction<number> {
-  return typeof action.payload === 'number';
+const logIn = createAction<Partial<StateSlice>>('logIn');
+const logOut = createAction<null>('logOut');
+
+interface StateSlice {
+  jwtToken?: string | null;
+  isAuthenticated: boolean;
+  account?: User | null;
 }
 
-export const accountReducer = createReducer(
-  {
-    counter: 0,
-    sumOfNumberPayloads: 0,
-    unhandledActions: 0,
-  },
+const initialState = {
+  jwtToken: null,
+  isAuthenticated: false,
+  account: null,
+};
+
+export const accountReducer = createReducer<StateSlice>(
+  initialState,
   builder => {
     builder
       .addCase(logIn, (state, action) => {
-        // action is inferred correctly here
-        state.counter += action.payload;
+        state.jwtToken = action.payload.jwtToken;
+        state.isAuthenticated =
+          action.payload.isAuthenticated ?? state.isAuthenticated;
+        state.account = action.payload.account ?? state.account;
       })
-      // You can chain calls, or have separate `builder.addCase()` lines each time
-      .addCase(logOut, (state, action) => {
-        state.counter -= action.payload;
+
+      .addCase(logOut, state => {
+        state.isAuthenticated = false;
+        state.jwtToken = null;
       })
-      // You can apply a "matcher function" to incoming actions
-      .addMatcher(isActionWithNumberPayload, (state, action) => {})
-      // and provide a default case if no other handlers matched
-      .addDefaultCase((state, action) => {});
+
+      .addDefaultCase(state => {
+        state.isAuthenticated = false;
+        state.jwtToken = null;
+        state.account = null;
+      });
   },
 );

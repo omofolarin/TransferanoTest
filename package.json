@@ -10,16 +10,29 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.8.3",
     "@react-native-async-storage/async-storage": "^1.15.11",
+    "@react-native-community/checkbox": "^0.5.9",
     "@react-navigation/native": "^6.0.6",
+    "@react-navigation/stack": "^6.0.11",
     "@reduxjs/toolkit": "^1.6.2",
+    "@types/react-native-vector-icons": "^6.4.10",
     "react": "17.0.2",
+    "react-hook-form": "^7.19.5",
+    "react-merge-refs": "^1.1.0",
     "react-native": "0.66.3",
     "react-native-flipper": "^0.119.0",
+    "react-native-gesture-handler": "^1.10.3",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-svg": "^12.1.1",
+    "react-native-vector-icons": "^9.0.0",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-flipper": "^2.0.1",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "rn-flipper-async-storage-advanced": "^1.0.4",
+    "v": "^0.3.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

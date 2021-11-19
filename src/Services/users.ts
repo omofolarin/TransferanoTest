@@ -1,23 +1,34 @@
+import {ListResponse, User} from './types';
 // Need to use the React-specific entry point to import createApi
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-
-import {User} from './types';
 
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({baseUrl: 'https://pokeapi.co/api/v2/'}),
+  refetchOnFocus: true,
+  baseQuery: fetchBaseQuery({baseUrl: 'https://reqres.in/api/'}),
   endpoints: builder => ({
-    getUserByName: builder.query<User, string>({
-      query: name => `user/${name}`,
+    logIn: builder.mutation<
+      {token: string},
+      {body: {email: string; password: string}}
+    >({
+      query: config => ({
+        url: 'login',
+        method: 'POST',
+        body: config.body,
+      }),
     }),
 
-    listAttendees: builder.query<User[], {name: string}>({
-      query: filter => `user/${filter.name}`,
+    listAttendees: builder.query<ListResponse<User>, Partial<{name: string}>>({
+      query: filter => {
+        console.log(`users/${filter.name}`);
+
+        return `users/`;
+      },
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useGetUserByNameQuery} = userApi;
+export const {useLogInMutation, useListAttendeesQuery} = userApi;
